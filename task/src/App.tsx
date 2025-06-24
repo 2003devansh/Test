@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import { Select, Space , Input,Form,Button} from 'antd';
 import { DatePicker,} from 'antd';
+import { message } from 'antd';
+import { useDispatch } from 'react-redux';
+import  { setFormData, setFormErrors, resetForm } from "./features/FormSlice"
+import { useForm } from 'antd/es/form/Form';
 
 
 
@@ -33,7 +37,6 @@ const provinceData1: CityName1[] = ['Agra'];
 const provinceData2 : CityName2[] = ['Raipur'] ;
 
 const App: React.FC = () => {
-
   const [sourceProvince, setSourceProvince] = useState<CityName1>(provinceData1[0]);
   const [sourceCities, setSourceCities] = useState(cityData1[provinceData1[0]]);
 
@@ -51,8 +54,26 @@ const App: React.FC = () => {
     setDestCities(cityData2[value]);
   };
 
+
+  const dispatch = useDispatch()
+
+  const [messageApi,ContextHolder] = message.useMessage() ;
+  
+  // const info = () =>{
+  //   messageApi.info("clicked")
+  // }
+  const [form] = useForm() ; 
+
+  const onfinishClicked = (val : any ) =>{
+    form.resetFields() ;
+
+    dispatch(setFormData(val));
+    dispatch(resetForm(val)) ; 
+    messageApi.success('Form submitted successfully!');
+  }
+
   return (
-    <Form  onFinish={(values)=>console.log('dfgh',values)}>
+    <Form form={form}  onFinish={onfinishClicked}>
      <Form.Item label="Order ID" name="orderId" rules={[{ required: true }]}>
         <Input placeholder="Order Id" />
       </Form.Item>
@@ -158,13 +179,12 @@ const App: React.FC = () => {
     </Form.Item>
 
 
-   <Form.Item>
-        <Button type="primary" htmlType="submit"
-        
-        >
+   {/* <Form.Item> */}
+    {ContextHolder}
+        <Button type="primary"  htmlType="submit">
           Submit
         </Button>
-      </Form.Item>
+      {/* </Form.Item> */}
     </Form>
   );
 };
