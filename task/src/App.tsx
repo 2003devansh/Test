@@ -66,9 +66,7 @@ const App: React.FC = () => {
 
   const onfinishClicked = (val : any ) =>{
     form.resetFields() ;
-
-    dispatch(setFormData(val));
-    dispatch(resetForm(val)) ; 
+    dispatch(setFormData(val)); 
     messageApi.success('Form submitted successfully!');
   }
 
